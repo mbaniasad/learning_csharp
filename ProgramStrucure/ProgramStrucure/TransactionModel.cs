@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using Npgsql;
-using System.Data.SqlClient;
 
 
 namespace ProgramStrucure
@@ -12,26 +11,22 @@ namespace ProgramStrucure
 
         public int Create(Transaction entity)
         {
-            // throw new NotImplementedException();
-            // TODO: Save to DB
+            // throw new NotImplementedException();    
 
-            NpgsqlConnection dbCon = new NpgsqlConnection("Server=192.168.0.252;" +
-                "Port=5432;" +
-                "Database=home_fin;" +
-                "User ID=postgres;" +
-                "Password=;");
-            dbCon.Open();
-            NpgsqlCommand dbAdd = new NpgsqlCommand(@"INSERT INTO entities.transactions
+            var sqlPrameter = new Dictionary<String, object>
+            {
+                { "category", entity.type },
+                { "value", entity.value },
+                { "date_time", entity.datetime },
+                { "currency_type", entity.currencyType.ToString() }
+            };
+            // sqlPrameter.Add("category", "sd");
+            DBAccessor dbInsert = new DBAccessor();
+            object dbReturn = dbInsert.ExecuteScalar(@"INSERT INTO entities.transactions
             (category, value, date_time, currency_type)
-            VALUES(:category, :value, :date_time, :currency_type) returning id");
-            dbAdd.Parameters.AddWithValue("category", entity.type);
-            dbAdd.Parameters.AddWithValue("value", entity.value);
-            dbAdd.Parameters.AddWithValue("date_time", entity.datetime);
-            dbAdd.Parameters.AddWithValue("currency_type", entity.currencyType.ToString());
-            dbAdd.Connection = dbCon;
-            int a = (int) dbAdd.ExecuteScalar();
-            dbCon.Close();
-            return a;
+            VALUES(:category, :value, :date_time, :currency_type) returning id", sqlPrameter);            
+
+            return (int)dbReturn;
         }
 
         public bool Delete(int id)
