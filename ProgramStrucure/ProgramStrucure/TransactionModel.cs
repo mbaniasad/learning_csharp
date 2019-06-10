@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using Npgsql;
 
@@ -44,7 +45,28 @@ namespace ProgramStrucure
 
         public Transaction Read(int id)
         {
-            throw new NotImplementedException();
+            var sqlPrameter = new Dictionary<String, object>
+            {
+                { "id", id}
+            };
+            DataTable dbReturn = dbAccess.ExeRead(@"select * from entities.transactions where id = :id",
+                sqlPrameter);
+            if (dbReturn != null && dbReturn.Rows.Count >0)
+            {
+                DataRow row = dbReturn.Rows[0];
+                //int tranid = row["id"].ToString();
+                Transaction readTransaction = new Transaction(
+                    row["category"].ToString(), 
+                    Convert.ToDecimal(row["value"]), 
+                    Convert.ToDateTime(row["date_time"]), 
+                    (CurrencyType) Enum.Parse(typeof(CurrencyType), row["currency_type"].ToString())
+                    );
+                return readTransaction;
+
+            }
+            return null;
+            
+            //throw new NotImplementedException();
 
         }
 

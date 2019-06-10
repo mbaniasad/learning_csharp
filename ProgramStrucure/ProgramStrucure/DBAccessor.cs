@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using Npgsql;
 
@@ -37,7 +38,7 @@ namespace ProgramStrucure
             {
                 dbCon.Close();
             }
-        }
+        }// End ExecuteScalar - Create
         public object ExeNoneQuery(String sqlText, Dictionary<String, object> sqlParam)
         {
             try
@@ -61,6 +62,33 @@ namespace ProgramStrucure
                 dbCon.Close();
             }
 
-        }
-    }
+        } // ENd ExeNoneQuery - Delete
+        public DataTable ExeRead(String sqlText, Dictionary<String, object> sqlParam)
+        {
+            try
+            {
+                dbCon.Open();
+                NpgsqlCommand dbRead = new NpgsqlCommand(sqlText);
+                foreach (var item in sqlParam)
+                {
+                    dbRead.Parameters.AddWithValue(item.Key, item.Value);
+                }
+                dbRead.Connection = dbCon;
+                var r = dbRead.ExecuteReader();
+                DataTable dataTable = new DataTable();
+                dataTable.Load(r);
+                return dataTable;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                dbCon.Close();
+            }
+        }// ENd ExeRead - Read
+    }//End Class DBAccessor
 }

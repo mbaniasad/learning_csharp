@@ -30,6 +30,11 @@ namespace ProgramStructure
                     program.DeleteTransaction();
                     Console.ReadLine();
                     break;
+                case "R":
+                case "r":
+                    program.ReadTransaction();
+                    Console.ReadLine();
+                    break;
                 default:
                     Console.WriteLine("Wrong Input");
                     Console.ReadLine();
@@ -101,6 +106,23 @@ namespace ProgramStructure
                 // Console.WriteLine("Finally");
                 Console.ReadLine();
             }
+        }// End CreateTransaction
+        public void ReadTransaction()
+        {
+            Console.WriteLine("Enter the ID: ");
+            int tranId = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("-----Reading from DB-----");
+            try
+            {
+                ProgramStrucure.Transaction readElement = transactionModel.Read(tranId);
+                Console.WriteLine(readElement.value + readElement.currencyType.ToString() + " spend on " +
+                    readElement.datetime + ": " + readElement.type);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }            
         }
     }
 
