@@ -4,6 +4,7 @@ namespace ProgramStructure
 {
     class Program
     {
+        ProgramStrucure.TransactionModel transactionModel = new ProgramStrucure.TransactionModel();
         /// <summary>
         /// static
         /// </summary>
@@ -14,7 +15,54 @@ namespace ProgramStructure
             //Console.ReadLine();
             //GetText firstObj = new GetText();
             //firstObj.PrintText();
-            ProgramStrucure.TransactionModel transactionModel = new ProgramStrucure.TransactionModel();
+            Program program = new Program();
+            Console.Write("Select a Function= C: Create, R: Read, U: Update, D: Delete: ");
+            String sqlFunc = Console.ReadLine();
+            switch (sqlFunc)
+            {
+                case "C":
+                case "c":
+                    program.CreateTransaction();
+                    Console.ReadLine();
+                    break;
+                case "D":
+                case "d":
+                    program.DeleteTransaction();
+                    Console.ReadLine();
+                    break;
+                default:
+                    Console.WriteLine("Wrong Input");
+                    Console.ReadLine();
+                    break;
+            }
+
+
+
+            
+        }
+
+        public void DeleteTransaction()
+        {
+            Console.WriteLine("Enter the ID: ");
+            int tranId = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("-----Deleting from DB-----");
+
+            try
+            {
+                int delElement = transactionModel.Delete(tranId);
+                Console.WriteLine("Number of effected rows is " + delElement);
+                //Console.ReadLine();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadLine();
+            }                      
+
+        }
+
+        public void CreateTransaction()
+        {
             Console.WriteLine("Enter the transaction details:");
             // Type, Price, Date(yyyy,mm,dd), Currency[RIAL, EURO (default), USD ]");
             Console.Write("Type: ");
@@ -23,9 +71,9 @@ namespace ProgramStructure
             String tranPriceStr = Console.ReadLine();
             decimal tranPriceDbl = Convert.ToDecimal(tranPriceStr);
 
-            ProgramStrucure.CurrencyType tranCurrencyType = (ProgramStrucure.CurrencyType)2;
+            ProgramStrucure.CurrencyType tranCurrencyType = (ProgramStrucure.CurrencyType)1;
             Console.Write("Currency[0: RIAL, 1: EURO, 2: USD ]- (Press Enter for the default Value Euro): ");
-            String tranCurrStr = Console.ReadLine();            
+            String tranCurrStr = Console.ReadLine();
             if (tranCurrStr != "")
             {
                 int tranCurrInt = Convert.ToInt16(tranCurrStr);
@@ -35,7 +83,7 @@ namespace ProgramStructure
             String tranDateStr = Console.ReadLine();
             DateTime tranDateTime = Convert.ToDateTime(tranDateStr);
             Console.WriteLine("--------------Saving to DB-----------------");
-            
+
             ProgramStrucure.Transaction transaction = new ProgramStrucure.Transaction(tranType, tranPriceDbl, tranDateTime, tranCurrencyType);
             try
             {
@@ -46,15 +94,13 @@ namespace ProgramStructure
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                Console.ReadLine();
             }
             finally
             {
-                Console.WriteLine("Finally");
+                // Console.WriteLine("Finally");
                 Console.ReadLine();
             }
-
-
-            // int entityId = 
         }
     }
 

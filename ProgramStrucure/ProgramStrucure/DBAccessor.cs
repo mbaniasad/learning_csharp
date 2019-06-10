@@ -13,19 +13,54 @@ namespace ProgramStrucure
                 "User ID=postgres;" +
                 "Password=mopostgres6687;");
 
-        public object ExecuteScalar( String sqlText, Dictionary<String, object> sqlPrameters)
-        {            
-            dbCon.Open();
-            NpgsqlCommand dbAdd = new NpgsqlCommand(sqlText);
-
-            foreach (var item in sqlPrameters)
+        public object ExecuteScalar(String sqlText, Dictionary<String, object> sqlParam)
+        {
+            try
             {
-                dbAdd.Parameters.AddWithValue(item.Key, item.Value);
-            }            
-            dbAdd.Connection = dbCon;
-            object a = dbAdd.ExecuteScalar();
-            dbCon.Close();
-            return a;
+                dbCon.Open();
+                NpgsqlCommand dbAdd = new NpgsqlCommand(sqlText);
+
+                foreach (var item in sqlParam)
+                {
+                    dbAdd.Parameters.AddWithValue(item.Key, item.Value);
+                }
+                dbAdd.Connection = dbCon;
+                object r = dbAdd.ExecuteScalar();
+                return r;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                dbCon.Close();
+            }
+        }
+        public object ExeNoneQuery(String sqlText, Dictionary<String, object> sqlParam)
+        {
+            try
+            {
+                dbCon.Open();
+                NpgsqlCommand dbAdd = new NpgsqlCommand(sqlText);
+                foreach (var item in sqlParam)
+                {
+                    dbAdd.Parameters.AddWithValue(item.Key, item.Value);
+                }
+                dbAdd.Connection = dbCon;
+                object r = dbAdd.ExecuteNonQuery();
+                return r;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                dbCon.Close();
+            }
+
         }
     }
 }

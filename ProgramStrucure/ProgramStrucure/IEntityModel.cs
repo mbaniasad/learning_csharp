@@ -6,6 +6,6 @@ namespace ProgramStrucure
 {
     interface Ideleteable
     {
-        bool Delete(int id);    
+        int Delete(int id);    
     }
 }
